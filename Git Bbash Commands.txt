@@ -1,0 +1,132 @@
+The "HEAD" points to the last commit of the tip of the current branch.
+
+which git (gives path where git is installed)
+git --version (gives the git version)
+git status
+git add . (Add all changed/new files in directory to staging)
+git add filename (Add particular file to staging)
+git add directoryName/  (Add all file in that directory to staging)
+git log (check the log)
+git commit -m "message" (To commit to repository with valid message)
+ls -la/dir -la (see all files in current directory which the CLI is referring to)
+ls -la dirName/dir -la dirName (to see all files in the dir mentioned relative to current directory)
+clear (clear the Console window)
+git diff (Difference between all the files in repository and working directory)
+git diff fileName(Difference between the file mentioned in repository and working directory)
+git diff --staged(Difference between all the files in repository and staging directory)
+git rm fileName (Remove a file from directory and staging index)
+git mv fileName1 fileName2 (Rename/move a file to different directory)
+git diff --color-words contact.html (color the difference in words)
+git commit -am "message" (add and commit all files in one go but does not support for deleted or newly added files)
+
+------------------------------------------------------UNDO Changes----------------------------------------
+git checkout -- fileName (Checkout the file from repository and replace it with the working directory file. if we dont specify the --, it will checkout that branch whose name matches with the fileName)
+
+git reset HEAD fileName (Undo the file in staging directory)
+
+git commit --amend -m "Message"  (Amends the last commit i.e Adds a newly staged file to the last commit or change the commit message)
+
+git checkout commitId -- fileName (checkout the file from that commit and put it into staging directory)
+
+cat fileName (Read the contents of the file in UNIX system)
+
+git reset --soft commitId (resets the HEAD pointer to the commitId repository version but the staging index and working directory retains the changes)
+
+git reset --mixed commitId (resets the HEAD pointer to the commitId repository version and only working directory retains the changes)
+
+git reset --hard commitId (resets the HEAD pointer to the commitId repository version and both staging index and working directory  changes are lost)
+
+git clean -n/-f  (Notifies/Removes the untracked files from the working directory)
+
+----------------------------global ignore
+$ git config --global core.excludesfile ~/.gitignore_global (Registers global gitignore file in gitconfig file)
+
+-------------------------------Ignore tracked files-------------------------------------
+update .gitignore file and then
+git rm --cached fileName (Removes the file from staging index i.e untrack the file)
+Note: Git doesnot track a empty directory unless there is a file in it.Trick is to keep a small file named .gitkeep to track the directory.
+
+------------------------navigating the commit tree-------------------------------------------------
+parent commit
+-HEAD^,acf4763^,master^
+-HEAD~1,HEAD~
+grandparent commit
+-HEAD^^,acf4736^^,master^^
+-HEAD~2
+
+$git ls-tree HEAD (list out all the files in the parent commit)
+$git ls-tree HEAD^ (list out all the files in the grandparent commit)
+Note: A blob is any kind of file,A tree is referred to a directory
+
+git log --oneline (gives log in one line)
+-------------------------------------------------------Branching------------------------------------------
+git branch (gives the branches present in the repository * means current checked out branch)
+git branch branch_name (creates a new branch but current branch will still be master or earlier checkedout branch)
+
+git checkout branch_name (switches to the branch_name given)
+
+git checkout -b branch_name (creates a new branch and check it out at the same time)
+
+Note: You cannot switch branch unless your current branch working directory is almost clean i.e no data loss case on switching branch.
+
+git diff branch1..branch2 (print branch1 difference with branch2)
+
+git branch --merged (shows if everything in the current branch is merged with the previous branch)
+
+git branch -m oldBranchName newBranchName (renames the branch)
+
+git branch -d branch_name/git branch --delete branch_name (to delete a branch, use -D if want to delete even if its not merged)
+---------------------------------------------------------Merging-----------------------------------------------------
+git merge branch_name (The branch you have checked out will be merged with the branch_name)
+
+Note: Always checkout the branchname with whom you want to merge the other branch.
+
+Two types of merge- FastForward and true merge
+git merge --no-ff (forces git to do true merge even if its not required)
+git merge -ff (forces git to do only fast forward merge if possible)
+git merge --abort (to abort merging in case of conflicts)
+
+git log --graph (shows graphical representation of commits, merge in different branches)
+--------------------------------------------------Stashing------------------------------------------------------
+git stash save 'message' (Stash the uncommited changes before switching branch without commit)
+
+git stash list (shows all the stashes in all the branches)
+git stash show stash@{0} (shows the changes in the that particular stash)
+git stash show -p stash@{0}  (Descriptive way to look at whats in the stash)
+git stash pop stash@{0}  (Pulls the stash changes in the current branch working directory and deletes that stash)
+git stash apply stash@{0} (Pulls the stash changes in the current branch working directory but doesn't deletes that stash)
+git stash drop stash@{0} {Deletes that stash from the stash list}
+git stash clear (drop/delete all the stash in the stash list)
+
+-------------------------------------------------Remote---------------------------------------------------------
+git remote (gives the list of all the remote repository)
+git remote add <alias> <url> (create a new remote repository named <alias> on github at the given <url>)
+git remote -v (Descriptive info about remote repository,Github stores this info in .git/config file..check "cat .git/config")
+git remote rm <alias>  (Removes the remote repository with <alias> name)
+git push -u <remote alias> <branch name to push> (pushes the changes to remote repository,u implies this branch will be tracked, ther will be an entry in local .git/config file about the head of the remote repository branch)
+ls -la .git/refs/remotes (github stores the list of remotes in this directory)
+git branch -r (Shows only the remote branches)
+git branch -a (Shows both remote and local branches)
+git clone <remote repo url> (creates a local repository from remote repository)
+git clone <remote repo url> <alias name for cloned repo> (creates a local repository from remote repository)
+
+Note: clone only creates the default repository defined in github repo admin controls, specifically you can specify the branch name
+
+git log <branchname> (gives the log details of that branch name, You can specify remote branch too e.g git log origin/master)
+
+git push (if its a tracked branch, no need to specify remote repo and branch name)
+
+git fetch <remote_repository_alias> (fetches the remote_repository_alias changes and sync up with local repository)
+
+Note: During fetch, Remote repository changes are updated in remote_repository_alias branch which is a separate pointer if local master and remote_repository_alias are same. remote_repository_alias branch always try to remain in sync of remote branch
+
+git pull=git fetch + git merge
+
+Note: Remote branches are similar to local branches with one exception that they can't be checked out.But you can make a copy of it.
+
+git branch <new_branch> <remote_branch> (will create a new local branch by copying from remote_branch)
+
+git checkout -b <new_branch> <remote_branch> (will create a new local branch by copying from remote_branch and check it out)
+
+git push <remote alias> :<branch name to push> (to delete a remote branch)
+git push <remote alias> --delete <branch name to push> (Another way to delete a remote branch)
